@@ -37,7 +37,7 @@ class User(Base):
     role = Column(Enum(UserRole, name="user_role"), default=UserRole.User)
     hashed_password = Column(String())
     services = relationship(
-        "Service", secondary=user_service, back_populates="users"
+        "Service", secondary=user_service, back_populates="users", lazy="selectin"
     )
 
     def get_full_name(self):
@@ -54,6 +54,6 @@ class Service(Base):
     updated_at = Column(DateTime, default=func.current_timestamp(),
                         onupdate=func.current_timestamp())
     users = relationship(
-        "User", secondary=user_service, back_populates="services"
+        "User", secondary=user_service, back_populates="services", lazy="selectin"
     )
     price = Column(Integer, nullable=False)

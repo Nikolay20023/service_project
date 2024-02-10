@@ -42,7 +42,7 @@ class RepositoryDB(Repository, Generic[ModelType, CreateSchemaType, UpdateSchema
 
         statement = select(self._model).where(self._model.username == username)
         results = await db.execute(statement=statement)
-        db_obj = results.scalar_one_or_none()
+        db_obj = results
         return db_obj
 
     async def get_multi(
@@ -78,7 +78,7 @@ class RepositoryDB(Repository, Generic[ModelType, CreateSchemaType, UpdateSchema
     ):
         statement = select(self._model).where(self._model.id == id)
         results = await db.execute(statement=statement)
-        db_obj = results.scalar_one_or_none()
+        db_obj = results.scalar()
         if db_obj:
             await db.delete(db_obj)
             await db.commit()
