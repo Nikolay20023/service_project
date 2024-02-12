@@ -14,7 +14,8 @@ user_service = Table(
     Base.metadata,
     Column("user_id", ForeignKey("users.id", ondelete="CASCADE")),
     Column("service_id", ForeignKey("services.id", ondelete="CASCADE")),
-    Column("price", Integer, nullable=False)
+    Column("price", Integer, nullable=False,),
+    Column("amount", Integer, default=1)
 )
 
 

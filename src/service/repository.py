@@ -42,7 +42,7 @@ class RepositoryDB(Repository, Generic[ModelType, CreateSchemaType, UpdateSchema
 
         statement = select(self._model).where(self._model.username == username)
         results = await db.execute(statement=statement)
-        db_obj = results
+        db_obj = results.scalar_one_or_none()
         return db_obj
 
     async def get_multi(
@@ -82,3 +82,12 @@ class RepositoryDB(Repository, Generic[ModelType, CreateSchemaType, UpdateSchema
         if db_obj:
             await db.delete(db_obj)
             await db.commit()
+
+    async def insert(self, db: AsyncSession, *, obj_in: CreateSchemaType):
+        obj_in_data = jsonable_encoder(obj_in)
+        statement = self._model.insert().values(**obj_in_data)
+        result = await db.execute(statement=statement)
+
+        await db.commit()
+
+        return result

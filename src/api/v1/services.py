@@ -6,10 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
 from db.db import get_session
-from schema.user import User
+from schema.user import User, UserService
 from schema.service import ServiceDB, ServiceCreate, ServiceUpdate
 from api.v1.users import get_current_user
-from service.users import service_crud, user_crud
+from service.users import service_crud, user_crud, user_service_crud
 from core.logger import LOGGING
 
 
@@ -50,7 +50,7 @@ async def get_multi_services(
     user_db = await user_crud.get(db=db, id=username)
     if user_db:
         return {
-            "services": user_db.services
+            "services": user
         }
 
 
@@ -76,3 +76,20 @@ async def patch_service(
     except AttributeError:
         return {"message": "Incorrectly typed id"}
     return ServiceUpdate(**service.__dict__)
+
+
+@router.post("/user_service", status_code=status.HTTP_201_CREATED)
+async def create_user_service(
+    data: UserService,
+    db: AsyncSession = Depends(get_session)
+):
+    try:
+        service = await service_crud.get(db=db, id=data.service_id)
+        data.price = service.price
+        new_ent = await user_service_crud.insert(db=db, obj_in=data)
+    except Exception:
+        raise Exception
+
+    return {
+        "new": new_ent
+    }

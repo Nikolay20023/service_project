@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+import uuid
 
 
 class Token(BaseModel):
@@ -27,3 +28,15 @@ class UserCreate(User):
 
 class UserUpdate(User):
     email: str
+
+
+class UserService(BaseModel):
+    user_id: uuid.UUID
+    service_id: uuid.UUID
+    amount: int
+    price: int = 0
+
+
+class UserServiceUpdate(BaseModel):
+    price: int
+    amount: int

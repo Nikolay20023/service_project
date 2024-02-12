@@ -97,6 +97,6 @@ async def signin(
     return Token(access_token=access_token, token_type="bearer")
 
 
-@router.get("/users/me/", response_model=User)
+@router.get("/users/me/")
 async def read_own_users(user: Annotated[User, Depends(get_current_user)]):
     return user
