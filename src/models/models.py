@@ -15,7 +15,7 @@ user_service = Table(
     Column("user_id", ForeignKey("users.id", ondelete="CASCADE")),
     Column("service_id", ForeignKey("services.id", ondelete="CASCADE")),
     Column("price", Integer, nullable=False,),
-    Column("amount", Integer, default=1)
+    Column("amount", Integer, default=1),
 )
 
 
